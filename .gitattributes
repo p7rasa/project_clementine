@@ -1,2 +1,13 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# FL Studio Proje Dosyaları
+*.flp filter=lfs diff=lfs merge=lfs -text
+
+# Ses Dosyaları (En kritik olanlar)
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+
+# Paket Halindeki Projeler
+*.zip filter=lfs diff=lfs merge=lfs -text
