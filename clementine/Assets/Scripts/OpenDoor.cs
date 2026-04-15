@@ -26,6 +26,8 @@ public class OpenDoor : MonoBehaviour
         {
             anim.SetTrigger("OpenDoor");
             CodePanel.SetActive(false);
+            
+            GameManager.instance.LevelCompleted();
         }
         if(codeTextValue.Length >= 4)
         {
