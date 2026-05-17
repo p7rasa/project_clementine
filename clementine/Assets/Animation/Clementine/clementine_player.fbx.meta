@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a3137a758facf1b4db100fe16b68ce0c
+guid: da8af58c63b73034dac801ae3cc74299
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -83,7 +83,12 @@ ModelImporter:
   humanDescription:
     serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: clementine_player(Clone)
+      parentName: 
+      position: {x: -0.42447484, y: 2.7402737, z: -0.07287966}
+      rotation: {x: -0.00000003774895, y: 0, z: -0, w: 1}
+      scale: {x: 89.44853, y: 89.44853, z: 89.44853}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5

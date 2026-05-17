@@ -1,23 +1,27 @@
 using UnityEngine;
+using System.Collections;
 
 public class Alarm : MonoBehaviour
 {
     public static bool alarmActive = false;
     public static Vector3 alarmPosition;
 
-    void OnTriggerEnter(Collider other)
+    public float alarmDuration = 5f;
+
+    public void ActivateAlarm()
     {
-        if (other.CompareTag("Player"))
-        {
-            ActivateAlarm();
-        }
+        alarmPosition = transform.position;
+        alarmActive = true;
+
+        Debug.Log("Alarm calisiyo");
+
+        StartCoroutine(StopAlarm());
     }
 
-    void ActivateAlarm()
+    IEnumerator StopAlarm()
     {
-        alarmActive = true;
-        alarmPosition = transform.position;
+        yield return new WaitForSeconds(alarmDuration);
 
-        Debug.Log("Alarm çalisti!");
+        alarmActive = false;
     }
 }
