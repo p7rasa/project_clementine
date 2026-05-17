@@ -23,9 +23,15 @@ public class PlayerMovement : MonoBehaviour
 
     private bool canMove = true;
 
+    // ANIMATOR
+    private Animator anim;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+
+        // ANIMATOR
+        anim = GetComponent<Animator>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -48,6 +54,13 @@ public class PlayerMovement : MonoBehaviour
 
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
+        // ANIMATOR
+        float moveAmount =
+            Mathf.Abs(Input.GetAxisRaw("Vertical")) +
+            Mathf.Abs(Input.GetAxisRaw("Horizontal"));
+
+        anim.SetFloat("Speed", moveAmount);
+
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
             moveDirection.y = jumpPower;
@@ -62,11 +75,8 @@ public class PlayerMovement : MonoBehaviour
             moveDirection.y -= gravity * Time.deltaTime;
         }
 
-       
-
-            walkSpeed = 6f;
-            runSpeed = 12f;
-    
+        walkSpeed = 6f;
+        runSpeed = 12f;
 
         characterController.Move(moveDirection * Time.deltaTime);
 
@@ -87,15 +97,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.E))
-{
-    Debug.Log("E calisti");
+        {
+            Debug.Log("E calisti");
 
-     Alarm alarm = FindFirstObjectByType<Alarm>();
+            Alarm alarm = FindFirstObjectByType<Alarm>();
 
-    if (alarm != null)
-    {
-        alarm.ActivateAlarm();
-    }
-}
+            if (alarm != null)
+            {
+                alarm.ActivateAlarm();
+            }
+        }
     }
 }
