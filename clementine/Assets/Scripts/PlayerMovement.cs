@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float defaultHeight = 2f;
     public float crouchHeight = 1f;
     public float crouchSpeed = 3f;
+     public float interactDistance = 3f;
 
     private Vector3 moveDirection = Vector3.zero;
     private float rotationX = 0;
@@ -107,5 +108,24 @@ public class PlayerMovement : MonoBehaviour
                 alarm.ActivateAlarm();
             }
         }
+        Ray ray = Camera.main.ViewportPointToRay(
+            new Vector3(0.5f,0.5f,0)
+        );
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactDistance))
+        {
+            Drawer drawer = hit.collider.GetComponent<Drawer>();
+
+            if(drawer != null)
+            {
+                if(Input.GetKeyDown(KeyCode.E))
+                {
+                    drawer.ToggleDrawer();
+                }
+            }
+        }
+    
     }
 }
