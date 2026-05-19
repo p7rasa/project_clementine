@@ -35,7 +35,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        CheckPlayerDistance();
+        if (player == null) return;
+
+        HandleTransitions();
 
         switch (currentState)
         {
@@ -57,14 +59,43 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void HandleTransitions()
+    {
+        float distance =
+            Vector3.Distance(transform.position, player.position);
+
+        // Oyuncu görünürse her şeyi bırak kovala
+        if (distance < viewDistance)
+        {
+            if (currentState != EnemyState.Chasing)
+            {
+                ChangeState(EnemyState.Chasing);
+            }
+
+            return;
+        }
+
+        // Alarm aktifse araştır
+        if (Alarm.alarmActive &&
+            currentState == EnemyState.Guarding)
+        {
+            alarmPosition = Alarm.alarmPosition;
+
+            ChangeState(EnemyState.Investigating);
+        }
+    }
+
     void ChangeState(EnemyState newState)
     {
+        if (currentState == newState) return;
+
         currentState = newState;
 
         switch (newState)
         {
             case EnemyState.Guarding:
 
+                agent.isStopped = false;
                 agent.SetDestination(doorPoint.position);
 
                 Debug.Log("Kapıyı koruyor");
@@ -72,6 +103,7 @@ public class Enemy : MonoBehaviour
 
             case EnemyState.Investigating:
 
+                agent.isStopped = false;
                 agent.SetDestination(alarmPosition);
 
                 Debug.Log("Alarmı araştırıyor");
@@ -79,11 +111,14 @@ public class Enemy : MonoBehaviour
 
             case EnemyState.Chasing:
 
-                Debug.Log("Oyuncuyu kovalıyor!");
+                agent.isStopped = false;
+
+                Debug.Log("Oyuncuyu kovalıyor");
                 break;
 
             case EnemyState.Returning:
 
+                agent.isStopped = false;
                 agent.SetDestination(doorPoint.position);
 
                 Debug.Log("Göreve dönüyor");
@@ -93,17 +128,14 @@ public class Enemy : MonoBehaviour
 
     void GuardingUpdate()
     {
-        if (Alarm.alarmActive)
-        {
-            alarmPosition = Alarm.alarmPosition;
 
-            ChangeState(EnemyState.Investigating);
-        }
     }
 
     void InvestigatingUpdate()
     {
-        if (!agent.pathPending && agent.remainingDistance < 1.5f)
+        // Alarm noktasına ulaştıysa ve alarm bittiyse geri dön
+        if (!agent.pathPending &&
+            agent.remainingDistance <= 1.5f)
         {
             if (!Alarm.alarmActive)
             {
@@ -116,29 +148,27 @@ public class Enemy : MonoBehaviour
     {
         agent.SetDestination(player.position);
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance =
+            Vector3.Distance(transform.position, player.position);
 
         if (distance < catchDistance)
         {
             LoseGame();
         }
+
+        // Oyuncu kaçarsa görevine dön
+        if (distance > viewDistance * 1.5f)
+        {
+            ChangeState(EnemyState.Returning);
+        }
     }
 
     void ReturningUpdate()
     {
-        if (!agent.pathPending && agent.remainingDistance < 1.5f)
+        if (!agent.pathPending &&
+            agent.remainingDistance <= 1.5f)
         {
             ChangeState(EnemyState.Guarding);
-        }
-    }
-
-    void CheckPlayerDistance()
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        if (distance < viewDistance)
-        {
-            ChangeState(EnemyState.Chasing);
         }
     }
 
